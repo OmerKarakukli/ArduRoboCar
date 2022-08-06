@@ -9,20 +9,34 @@
 #define LeftMotDir1 2
 #define LeftMotDir2 3
 
+#define L_TRIG_PIN 48
+#define L_ECHO_PIN 49
+#define FL_TRIG_PIN 52
+#define FL_ECHO_PIN 53
+#define FR_TRIG_PIN 50
+#define FR_ECHO_PIN 51
+#define R_TRIG_PIN 46
+#define R_ECHO_PIN 47
+
+#define SERIAL_BAUDRATE 115200
+
+#define TX_BUFF_SIZE 128
+#define RX_BUFF_SIZE 128
+
 String serverIn = "";
 bool stringComplete = false;
 
-char output_buffer[128];
+char tx_buffer[TX_BUFF_SIZE];
 
-HRC FL{52, 53};
-HRC FR{50, 51};
-HRC L{48, 49};
-HRC R{46, 47};
+HRC L{L_TRIG_PIN, L_ECHO_PIN};
+HRC FL{FL_TRIG_PIN, FL_ECHO_PIN};
+HRC FR{FR_TRIG_PIN, FR_ECHO_PIN};
+HRC R{R_TRIG_PIN, R_ECHO_PIN};
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(115200);
-  serverIn.reserve(1024);
+  Serial.begin(SERIAL_BAUDRATE);
+  serverIn.reserve(RX_BUFF_SIZE);
   pinMode(RightMotPwm, OUTPUT);
   pinMode(LeftMotPwm, OUTPUT);
   pinMode(RightMotDir1, OUTPUT);
@@ -32,9 +46,9 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   analogWrite(RightMotPwm, 0);
   analogWrite(LeftMotPwm, 0);
+  L.init();
   FL.init();
   FR.init();
-  L.init();
   R.init();
 }
 
@@ -102,8 +116,8 @@ void loop() {
       FL.updateDist();
       FR.updateDist();
       R.updateDist();
-      sprintf_P(output_buffer, "%lu,%lu,%lu,%lu\n", L.get_cur_dist(), FL.get_cur_dist(), FR.get_cur_dist(), R.get_cur_dist());
-      Serial.write(output_buffer);
+      sprintf_P(tx_buffer, "%lu,%lu,%lu,%lu\n", L.get_cur_dist(), FL.get_cur_dist(), FR.get_cur_dist(), R.get_cur_dist());
+      Serial.write(tx_buffer);
     }
     else {
       Serial.println("Unknown command");
