@@ -15,16 +15,16 @@ void HRC::init()
 
 void HRC::updateDist()
 {
-digitalWrite(_trig_pin, LOW);
-delayMicroseconds(5);
-digitalWrite(_trig_pin, HIGH);
-delayMicroseconds(10);
-digitalWrite(_trig_pin, LOW);
-uint32_t duration = pulseIn(_echo_pin, HIGH, 3500); //250000
-if (duration != 0) {
-    _cur_dist = duration / 5.831;
+    digitalWrite(_trig_pin, LOW);
+    delayMicroseconds(5);
+    digitalWrite(_trig_pin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(_trig_pin, LOW);
+    uint32_t duration = pulseIn(_echo_pin, HIGH, 3500); //250000
+    if (duration != 0) {
+        _cur_dist = duration / 5.831;
 
-} else {
-    _cur_dist = 600;
-}
+    } else {
+        _cur_dist = 600;
+    }
 }

@@ -1,5 +1,4 @@
-#ifndef __HRC__H__
-#define __HRC__H__
+#pragma once
 
 #include <Arduino.h>
 
@@ -16,5 +15,3 @@ public:
     uint32_t get_cur_dist() { return _cur_dist; }
     void updateDist();
 };
-
-#endif
