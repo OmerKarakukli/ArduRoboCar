@@ -1,5 +1,5 @@
-#include "SystemConfig.h"
-#include "HRC.h"
+#include "system_config.h"
+#include "hrc.h"
 
 String serverIn = "";
 bool stringComplete = false;

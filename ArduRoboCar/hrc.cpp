@@ -1,4 +1,4 @@
-#include "HRC.h"
+#include "hrc.h"
 HRC::HRC(uint8_t trig_pin, uint8_t echo_pin)
   : _trig_pin(trig_pin)
   , _echo_pin(echo_pin)
