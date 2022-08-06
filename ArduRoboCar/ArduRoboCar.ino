@@ -1,3 +1,5 @@
+#include "HRC.h"
+
 #define ledPin 13
 
 #define RightMotPwm 7
@@ -11,46 +13,6 @@ String serverIn = "";
 bool stringComplete = false;
 
 char output_buffer[128];
-
-class HRC {
-private:
-  uint8_t _trig_pin{};
-  uint8_t _echo_pin{};
-  uint32_t _cur_dist{};
-public:
-  HRC(uint8_t trig_pin, uint8_t echo_pin)
-  : _trig_pin(trig_pin)
-  , _echo_pin(echo_pin)
-  {
-
-  }
-  
-  void init() {
-    pinMode(_trig_pin, OUTPUT);
-    digitalWrite(_trig_pin, LOW);
-    pinMode(_echo_pin, INPUT);    
-  }
-  
-  uint8_t get_trig_pin() { return _trig_pin; }
-  uint8_t get_echo_pin() { return _echo_pin; }
-  uint32_t get_cur_dist() { return _cur_dist; }
-
-  void updateDist() {
-    digitalWrite(_trig_pin, LOW);
-    delayMicroseconds(5);
-    digitalWrite(_trig_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(_trig_pin, LOW);
-    uint32_t duration = pulseIn(_echo_pin, HIGH, 3500); //250000
-    if (duration != 0) {
-      _cur_dist = duration / 5.831;
-    
-    } else {
-      _cur_dist = 600;
-    }
-  }
-
-};
 
 HRC FL{52, 53};
 HRC FR{50, 51};
