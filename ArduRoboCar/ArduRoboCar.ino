@@ -1,5 +1,6 @@
 #include "system_config.h"
 #include "hrc.h"
+#include "motor.h"
 
 String serverIn = "";
 bool stringComplete = false;
@@ -11,23 +12,21 @@ HRC front_left_hrc{FRONT_LEFT_HRC_TRIG_PIN, FRONT_LEFT_HRC_ECHO_PIN};
 HRC front_right_hrc{FRONT_RIGHT_HRC_TRIG_PIN, FRONT_RIGHT_HRC_ECHO_PIN};
 HRC right_hrc{RIGHT_HRC_TRIG_PIN, RIGHT_HRC_ECHO_PIN};
 
+Motor left_mot{LEFT_MOTOR_PWM_PIN, LEFT_MOTOR_DIR_1_PIN, LEFT_MOTOR_DIR_2_PIN, false};
+Motor right_mot{RIGHT_MOTOR_PWM_PIN, RIGHT_MOTOR_DIR_1_PIN, RIGHT_MOTOR_DIR_2_PIN, false};
+
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(SERIAL_BAUDRATE);
   serverIn.reserve(RX_BUFFER_SIZE);
-  pinMode(RIGHT_MOTOR_PWM_PIN, OUTPUT);
-  pinMode(LEFT_MOTOR_PWM_PIN, OUTPUT);
-  pinMode(RIGHT_MOTOR_DIR_1_PIN, OUTPUT);
-  pinMode(RIGHT_MOTOR_DIR_2_PIN, OUTPUT);
-  pinMode(LEFT_MOTOR_DIR_1_PIN, OUTPUT);
-  pinMode(LEFT_MOTOR_DIR_2_PIN, OUTPUT);
-  pinMode(LED_PIN, OUTPUT);
-  analogWrite(RIGHT_MOTOR_PWM_PIN, 0);
-  analogWrite(LEFT_MOTOR_PWM_PIN, 0);
   left_hrc.init();
   front_left_hrc.init();
   front_right_hrc.init();
   right_hrc.init();
+  left_mot.init();
+  right_mot.init();
+  
+  pinMode(LED_PIN, OUTPUT);
+  Serial.begin(SERIAL_BAUDRATE);
 }
 
 void loop() {
@@ -43,52 +42,30 @@ void loop() {
     }
     else if ((serverIn == "W") || (serverIn == "w")) {
       Serial.println("Go Forward");
-      digitalWrite(RIGHT_MOTOR_DIR_1_PIN, LOW);
-      digitalWrite(RIGHT_MOTOR_DIR_2_PIN, HIGH);
-      digitalWrite(LEFT_MOTOR_DIR_1_PIN, LOW);
-      digitalWrite(LEFT_MOTOR_DIR_2_PIN, HIGH);
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 255);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 255);
+      left_mot.setSpeed(255);
+      right_mot.setSpeed(255);
     }
     else if ((serverIn == "X") || (serverIn == "x")) {
       Serial.println("Go Backward");
-      digitalWrite(RIGHT_MOTOR_DIR_1_PIN, HIGH);
-      digitalWrite(RIGHT_MOTOR_DIR_2_PIN, LOW);
-      digitalWrite(LEFT_MOTOR_DIR_1_PIN, HIGH);
-      digitalWrite(LEFT_MOTOR_DIR_2_PIN, LOW);
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 255);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 255);
+      left_mot.setSpeed(-255);
+      right_mot.setSpeed(-255);
     }
     else if ((serverIn == "D") || (serverIn == "d")) {
       Serial.println("Turn Right");
-      digitalWrite(RIGHT_MOTOR_DIR_1_PIN, HIGH);
-      digitalWrite(RIGHT_MOTOR_DIR_2_PIN, LOW);
-      digitalWrite(LEFT_MOTOR_DIR_1_PIN, LOW);
-      digitalWrite(LEFT_MOTOR_DIR_2_PIN, HIGH);
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 255);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 255);
+      left_mot.setSpeed(255);
+      right_mot.setSpeed(-255);
     }
     else if ((serverIn == "A") || (serverIn == "a")) {
       Serial.println("Turn Left");
-      digitalWrite(RIGHT_MOTOR_DIR_1_PIN, LOW);
-      digitalWrite(RIGHT_MOTOR_DIR_2_PIN, HIGH);
-      digitalWrite(LEFT_MOTOR_DIR_1_PIN, HIGH);
-      digitalWrite(LEFT_MOTOR_DIR_2_PIN, LOW);
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 255);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 255);
+      left_mot.setSpeed(-255);
+      right_mot.setSpeed(255);
     }
     else if ((serverIn == "S") || (serverIn == "s")) {
       Serial.println("Stop");
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 0);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 0);
-    }
-    else if ((serverIn == "S") || (serverIn == "s")) {
-      Serial.println("Stop");
-      analogWrite(RIGHT_MOTOR_PWM_PIN, 0);
-      analogWrite(LEFT_MOTOR_PWM_PIN, 0);
+      left_mot.setSpeed(0);
+      right_mot.setSpeed(0);
     }
     else if ((serverIn == "Dist") || (serverIn == "dist")) {
-      //updateFrontDist();
       //Serial.println(frontDist);
       left_hrc.updateDist();
       front_left_hrc.updateDist();
