@@ -36,37 +36,43 @@ void loop() {
       Serial.println("Turn On");
       digitalWrite(LED_PIN, HIGH);
     }
+    
     else if ((serverIn == "OFF") || (serverIn == "off") || (serverIn == "Off")) {
       Serial.println("Turn Off");
       digitalWrite(LED_PIN, LOW);
     }
+    
     else if ((serverIn == "W") || (serverIn == "w")) {
       Serial.println("Go Forward");
       left_mot.setSpeed(255);
       right_mot.setSpeed(255);
     }
+    
     else if ((serverIn == "X") || (serverIn == "x")) {
       Serial.println("Go Backward");
       left_mot.setSpeed(-255);
       right_mot.setSpeed(-255);
     }
+    
     else if ((serverIn == "D") || (serverIn == "d")) {
       Serial.println("Turn Right");
       left_mot.setSpeed(255);
       right_mot.setSpeed(-255);
     }
+    
     else if ((serverIn == "A") || (serverIn == "a")) {
       Serial.println("Turn Left");
       left_mot.setSpeed(-255);
       right_mot.setSpeed(255);
     }
+    
     else if ((serverIn == "S") || (serverIn == "s")) {
       Serial.println("Stop");
       left_mot.setSpeed(0);
       right_mot.setSpeed(0);
     }
+    
     else if ((serverIn == "Dist") || (serverIn == "dist")) {
-      //Serial.println(frontDist);
       left_hrc.updateDist();
       front_left_hrc.updateDist();
       front_right_hrc.updateDist();
@@ -74,6 +80,7 @@ void loop() {
       sprintf_P(tx_buffer, "%lu,%lu,%lu,%lu\n", left_hrc.get_cur_dist(), front_left_hrc.get_cur_dist(), front_right_hrc.get_cur_dist(), right_hrc.get_cur_dist());
       Serial.write(tx_buffer);
     }
+    
     else {
       Serial.println("Unknown command");
     }
