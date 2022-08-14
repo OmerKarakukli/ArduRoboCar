@@ -1,4 +1,5 @@
 {
     "sketch": "ArduRoboCar/ArduRoboCar.ino",
-    "board": "arduino:sam:arduino_due_x_dbg"
+    "board": "arduino:sam:arduino_due_x_dbg",
+    "port": "/dev/ttyACM0"
 }
